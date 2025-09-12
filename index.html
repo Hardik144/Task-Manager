@@ -1,13 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Manager</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-    <body>
-        
-        <script src="script.js"></script>
-    </body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-theme="light">
+    <div class="container">
+      <header class="header">
+        <div class="logo">
+          <div class="logo-icon">TM</div>
+          <div class="logo-text">Task Manager</div>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">
+          🌙 Dark Mode
+        </button>
+      </header>
+
+      <div class="main-grid">
+        <div class="card">
+          <h2 class="card-title">Add Task</h2>
+          <p class="card-subtitle">
+            Quickly add tasks — they save to your browser.
+          </p>
+
+          <form class="form-grid" id="taskForm">
+            <div class="form-group">
+              <label class="form-label">Task title (e.g. Study React)</label>
+              <input
+                type="text"
+                class="form-input"
+                id="taskTitle"
+                placeholder="Enter task title"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-input" id="taskDate" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Time</label>
+              <input type="time" class="form-input" id="taskTime" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <select class="form-select" id="taskPriority">
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </form>
+
+          <div class="progress-section">
+            <div class="progress-label">
+              <span>Overall progress</span>
+              <span id="progressText">33%</span>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress-fill"
+                id="progressFill"
+                style="width: 33%"
+              ></div>
+            </div>
+          </div>
+
+          <div class="tasks-section">
+            <h3>Upcoming / Active</h3>
+            <div id="activeTasks"></div>
+          </div>
+        </div>
+
+        <div class="sidebar-grid">
+          <div class="card focus-card">
+            <h2 class="card-title">Today's Focus</h2>
+            <p class="card-subtitle">Top 3 incomplete tasks</p>
+            <div id="focusTasks"></div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">Stats</h2>
+            <p class="card-subtitle">At a glance</p>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span>Completed:</span>
+                <span id="completedCount">1</span>
+              </div>
+              <div class="stat-item">
+                <span>Pending:</span>
+                <span id="pendingCount">2</span>
+              </div>
+              <div class="stat-item">
+                <span>High priority:</span>
+                <span id="highPriorityCount">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="all-tasks-section">
+        <div class="tasks-header">
+          <h2 class="card-title">All Tasks</h2>
+          <select
+            class="filter-select"
+            id="filterSelect"
+            onchange="filterTasks()"
+          >
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="high">High Priority</option>
+          </select>
+        </div>
+        <div class="task-table" id="allTasks"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
 </html>
