@@ -39,16 +39,89 @@ function initializeTasks() {
   updateUI();
 }
 
-// Browser storage functions (simplified for demo)
+// Browser storage functions with localStorage
 function saveTasks() {
-  // In a real implementation, this would use localStorage
-  // For demo purposes, we'll just keep in memory
-  console.log("Tasks saved:", tasks);
+  try {
+    localStorage.setItem("taskManager_tasks", JSON.stringify(tasks));
+    localStorage.setItem("taskManager_counter", taskIdCounter.toString());
+    console.log("Tasks saved to localStorage:", tasks);
+  } catch (error) {
+    console.error("Error saving tasks to localStorage:", error);
+  }
 }
 
 function getTasks() {
-  // In a real implementation, this would retrieve from localStorage
-  return tasks;
+  try {
+    const savedTasks = localStorage.getItem("taskManager_tasks");
+    const savedCounter = localStorage.getItem("taskManager_counter");
+
+    if (savedTasks) {
+      const parsedTasks = JSON.parse(savedTasks);
+      taskIdCounter = savedCounter ? parseInt(savedCounter) : 1;
+      console.log("Tasks loaded from localStorage:", parsedTasks);
+      return parsedTasks;
+    }
+    return [];
+  } catch (error) {
+    console.error("Error loading tasks from localStorage:", error);
+    return [];
+  }
+}
+
+// Additional utility functions
+function clearAllTasks() {
+  try {
+    localStorage.removeItem("taskManager_tasks");
+    localStorage.removeItem("taskManager_counter");
+    tasks = [];
+    taskIdCounter = 1;
+    updateUI();
+    console.log("All tasks cleared from localStorage");
+  } catch (error) {
+    console.error("Error clearing tasks from localStorage:", error);
+  }
+}
+
+function exportTasks() {
+  try {
+    const dataStr = JSON.stringify(tasks, null, 2);
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "tasks_backup.json";
+    link.click();
+    URL.revokeObjectURL(url);
+    console.log("Tasks exported successfully");
+  } catch (error) {
+    console.error("Error exporting tasks:", error);
+  }
+}
+
+function importTasks(file) {
+  try {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        const importedTasks = JSON.parse(e.target.result);
+        if (Array.isArray(importedTasks)) {
+          tasks = importedTasks;
+          taskIdCounter = Math.max(...tasks.map((t) => t.id)) + 1;
+          saveTasks();
+          updateUI();
+          console.log("Tasks imported successfully");
+        } else {
+          throw new Error("Invalid file format");
+        }
+      } catch (parseError) {
+        console.error("Error parsing imported file:", parseError);
+        alert("Error: Invalid file format");
+      }
+    };
+    reader.readAsText(file);
+  } catch (error) {
+    console.error("Error importing tasks:", error);
+  }
 }
 
 // Theme management
